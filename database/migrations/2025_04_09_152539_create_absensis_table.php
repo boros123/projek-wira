@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('checkin')->nullable();
             $table->timestamp('checkout')->nullable();
             $table->enum('status', ['Hadir', 'Izin', 'Tidak Hadir'])->default('Tidak Hadir');
-          $table->string('keterangan')->nullable();
+            $table->string('keterangan')->nullable();
             $table->unique(['pegawai_id', 'tanggal']);
             $table->timestamps();
         });

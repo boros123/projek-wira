@@ -65,6 +65,19 @@
                    </div>
                </div>
            </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true"
+                aria-controls="collapseFour">
+                <i class="bi bi-table"></i>
+                <span class="text-uppercase">Nilai Pegawai</span>
+            </a>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header text-uppercase">Management</h6>
+                    <a class="collapse-item text-uppercase" href="/home/data-penilaian">Data Nilai</a>
+                </div>
+            </div>
+        </li>
 
            <!-- Nav Item - Utilities Collapse Menu -->
            {{-- <li class="nav-item">

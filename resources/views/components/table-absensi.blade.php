@@ -8,9 +8,10 @@
         <td>{{$a->checkout}}</td>
         <td>{{$a->keterangan}}</td>
         <td>{{$a->status}}</td>
+        {{-- <td>{{$a->jam_kerja}}</td> --}}
         <td>
             <div class="d-flex ms-4">
-                <a href="/get-data-pegawai/" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
+                <a href="/get-absen/{{ $a->id }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
             </div>
         </td>
     </tr>

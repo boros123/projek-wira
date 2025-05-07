@@ -12,7 +12,7 @@ LARAVEL_API_ABSEN = "http://127.0.0.1:8000/api/absen"
 # Load face detector
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-# Load pegawai data
+# Load data pegawai
 pegawai_data = requests.get(LARAVEL_API_PEGAWAI).json()
 face_encodings_db = {}
 pegawai_info_db = {}
@@ -36,21 +36,35 @@ for pegawai in pegawai_data:
             face_encodings_db[pegawai["id"]] = embedding
             pegawai_info_db[pegawai["id"]] = {
                 "nama": pegawai["nama_pegawai"],
-                "nip": pegawai["nip"]
+                "nip": pegawai["nip"],
+                "jam_kerja": pegawai["jam_kerja"]  # status lembur/hadir
             }
-        except:
+        except Exception as e:
+            print(f"Error memproses wajah pegawai {pegawai['id']}: {e}")
             continue
 
 print("Data pegawai berhasil dimuat.")
 
-# Fungsi untuk menentukan tipe absen
-def get_tipe_absen():
+# Fungsi untuk menentukan tipe absen per pegawai
+def get_tipe_absen(pegawai_id):
     now = datetime.now().time()
-    if datetime.strptime("14:00", "%H:%M").time() <= now <= datetime.strptime("15:00", "%H:%M").time():
+    status_pegawai = pegawai_info_db[pegawai_id]["jam_kerja"]
+
+    # Jika waktu sekarang antara jam 11.00 - 11.55, berarti checkin
+    if datetime.strptime("12:00", "%H:%M").time() <= now <= datetime.strptime("12:30", "%H:%M").time():
         return "checkin"
-    elif datetime.strptime("18:00", "%H:%M").time() <= now <= datetime.strptime("19:00", "%H:%M").time():
+    
+    # Jika waktu sekarang antara jam 13.00 - 13.30, berarti checkout normal
+    elif datetime.strptime("13:00", "%H:%M").time() <= now <= datetime.strptime("13:30", "%H:%M").time():
         return "checkout"
-    return None
+    
+    # Jika status pegawai lembur, bisa checkout kapan saja
+    elif status_pegawai == "lembur":
+        return "checkout"
+    
+    # Tidak memenuhi kriteria, tidak bisa absen
+    else:
+        return None
 
 # Variabel kontrol
 last_absen_time = {}
@@ -68,59 +82,62 @@ while cap.isOpened():
         break
 
     now = time.time()
-    tipe = get_tipe_absen()
-
     frame_height, frame_width = frame.shape[:2]
 
-    if tipe is None:
-        cv2.putText(frame, "Di luar jam absen (07:00–08:00 & 16:00–17:00)", (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-        status_recognition.clear()
-    else:
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        detected_faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    detected_faces = face_cascade.detectMultiScale(gray, 1.1, 5)
 
-        for (x, y, w, h) in detected_faces:
-            face_roi = frame[y:y+h, x:x+w]
-            try:
-                current_embedding = DeepFace.represent(face_roi, model_name="Facenet")[0]["embedding"]
-                wajah_dikenali = False
+    for (x, y, w, h) in detected_faces:
+        face_roi = frame[y:y+h, x:x+w]
+        try:
+            current_embedding = DeepFace.represent(face_roi, model_name="Facenet")[0]["embedding"]
+            wajah_dikenali = False
 
-                for pegawai_id, saved_embedding in face_encodings_db.items():
-                    distance = np.linalg.norm(np.array(current_embedding) - np.array(saved_embedding))
-                    if distance < 10:
-                        nama = pegawai_info_db[pegawai_id]["nama"]
-                        nip = pegawai_info_db[pegawai_id]["nip"]
+            for pegawai_id, saved_embedding in face_encodings_db.items():
+                distance = np.linalg.norm(np.array(current_embedding) - np.array(saved_embedding))
+                if distance < 10:
+                    tipe = get_tipe_absen(pegawai_id)
 
-                        if pegawai_id in last_absen_time and now - last_absen_time[pegawai_id] < RECOGNITION_HOLD_TIME:
-                            wajah_dikenali = True
-                            break
+                    if tipe is None:
+                        continue  # skip kalau di luar jam & bukan lembur
 
-                        payload = {'pegawai_id': pegawai_id, 'tipe': tipe}
-                        requests.post(LARAVEL_API_ABSEN, data=payload)
-                        last_absen_time[pegawai_id] = now
+                    nama = pegawai_info_db[pegawai_id]["nama"]
+                    nip = pegawai_info_db[pegawai_id]["nip"]
 
-                        success_text = f"Berhasil {tipe}"
-                        success_time = now
-
-                        status_recognition[pegawai_id] = {
-                            "timestamp": now,
-                            "coords": (x, y, w, h),
-                            "nama": nama,
-                            "nip": nip
-                        }
-
+                    if pegawai_id in last_absen_time and now - last_absen_time[pegawai_id] < RECOGNITION_HOLD_TIME:
                         wajah_dikenali = True
                         break
 
-                if not wajah_dikenali:
-                    cv2.putText(frame, "Wajah tidak dikenali", (x, y - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 1)
+                    payload = {'pegawai_id': pegawai_id, 'tipe': tipe}
+                    response = requests.post(LARAVEL_API_ABSEN, json=payload)
+                    if response.status_code == 200:
+                        print(f"Absen {tipe} berhasil untuk {nama}")
+                    else:
+                        print(f"Error absen untuk {nama}: {response.text}")
 
-            except Exception as e:
-                print("Error mengenali wajah:", e)
-                continue
+                    last_absen_time[pegawai_id] = now
+
+                    success_text = f"Berhasil {tipe}"
+                    success_time = now
+
+                    status_recognition[pegawai_id] = {
+                        "timestamp": now,
+                        "coords": (x, y, w, h),
+                        "nama": nama,
+                        "nip": nip
+                    }
+
+                    wajah_dikenali = True
+                    break
+
+            if not wajah_dikenali:
+                cv2.putText(frame, "Wajah tidak dikenali", (x, y - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 1)
+
+        except Exception as e:
+            print("Error mengenali wajah:", e)
+            continue
 
     # Tampilkan kotak hijau dan info pegawai yang dikenali
     for pegawai_id in list(status_recognition):

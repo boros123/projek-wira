@@ -68,6 +68,7 @@ class PegawaiController extends Controller
             'no_telp' => 'required|numeric|min:12',
             'foto_pegawai' => 'image|file|mimes:jpeg,png,jpg|max:20000',
             'alamat' => 'required|min:20',
+            'jam_kerja' => 'required',
         ];
 
         $validatedData = $request->validate($rules);
@@ -97,6 +98,17 @@ class PegawaiController extends Controller
         return back();
     }
 
+
+
+
+
+
+
+
+
+
+
+    
     // END POINT API PEGAWAI
     public function endpointpegawai(){
         $pegawai=Pegawai::all();

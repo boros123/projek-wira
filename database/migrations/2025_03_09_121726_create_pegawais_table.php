@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('no_telp');
             $table->string('foto_pegawai')->nullable();
             $table->text('alamat');
+            $table->enum('jam_kerja',['normal','lembur'])->default('normal');
             $table->timestamps();
         });
     }

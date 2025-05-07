@@ -21,7 +21,8 @@
                                 <th>Checkout</th>
                                 <th>Keterangan</th>
                                 <th>Status</th>
-                                <th>Lembur</th>
+                                <th>Jam Kerja</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="absensi-data">

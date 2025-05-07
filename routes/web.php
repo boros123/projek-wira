@@ -4,6 +4,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PenilaianController;
 use App\Models\Jabatan;
 use Illuminate\Support\Facades\Route;
 
@@ -38,3 +39,8 @@ Route::post('/update-pegawai/{pegawai}', [PegawaiController::class, 'update'])->
 // Absensi
 Route::get('fetchdataabsen', [AbsensiController::class, 'fetchdataabsen'])->name('fetchdata-absensi');
 Route::get('home/data-absensi', [AbsensiController::class, 'index'])->name('data-absensi');
+
+
+
+// Penilaian
+Route::get('home/data-penilaian', [PenilaianController::class, 'index'])->name('data-penilaian');
