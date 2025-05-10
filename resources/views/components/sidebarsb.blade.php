@@ -48,7 +48,9 @@
                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                    <div class="bg-white py-2 collapse-inner rounded">
                        <h6 class="collapse-header text-uppercase">Management</h6>
+
                        <a class="collapse-item text-uppercase" href="/data-pegawai">Data Pegawai</a>
+
                    </div>
                </div>
            </li>
