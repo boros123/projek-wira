@@ -8,7 +8,7 @@ use App\Models\Pegawai;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use RealRashid\SweetAlert\Facades\Alert;
+
 
 class AbsensiController extends Controller
 {
@@ -38,8 +38,8 @@ public function storeabsen(Request $request)
     if ($validated['tipe'] === 'checkin' && is_null($absensi->checkin)) {
         $absensi->checkin = $now;
 
-        $jam_checkin_awal  = Carbon::createFromTime(12, 0, 0);
-        $jam_checkin_akhir = Carbon::createFromTime(12, 30, 0);
+        $jam_checkin_awal  = Carbon::createFromTime(10, 0, 0);
+        $jam_checkin_akhir = Carbon::createFromTime(10, 40, 0);
 
         $status = $now->between($jam_checkin_awal, $jam_checkin_akhir) ? 'Tepat Waktu' : 'Terlambat';
         $absensi->keterangan = $status;
@@ -47,13 +47,20 @@ public function storeabsen(Request $request)
         $penilaian->poin += ($status === 'Tepat Waktu') ? 10 : -5;
     }
 
-    // ==== CHECKOUT ====
-    if ($validated['tipe'] === 'checkout' && is_null($absensi->checkout)) {
-        $jam_checkout        = Carbon::parse($now);
-        $batas_checkout_awal = Carbon::createFromTime(13, 0, 0);
-        $batas_checkout_akhir= Carbon::createFromTime(13, 30, 0);
-        $batas_jam_normal    = Carbon::createFromTime(13, 0, 0);
+   if ($validated['tipe'] === 'checkout' && is_null($absensi->checkout)) {
 
+    $jam_checkout        = Carbon::parse($now);
+    $batas_checkout_awal = Carbon::createFromTime(12, 0, 0);
+    $batas_checkout_akhir= Carbon::createFromTime(12, 50, 0);
+    $batas_jam_normal    = Carbon::createFromTime(12, 50, 0);
+
+    // Kalau belum checkin
+    if (is_null($absensi->checkin)) {
+        $absensi->checkout  = $now;
+        $absensi->status    = 'Tidak Hadir';
+        $absensi->keterangan= 'Tidak Check-in';
+    } 
+    else {
         if ($pegawai->jam_kerja === 'lembur') {
             $absensi->checkout = $now;
             $absensi->status   = 'Hadir';
@@ -72,22 +79,15 @@ public function storeabsen(Request $request)
                 $absensi->checkout = $now;
                 $absensi->status   = 'Hadir';
                 $penilaian->poin  += 5;
-            } else {
-                return response()->json([
-                    'message' => 'Checkout hanya bisa dilakukan antara jam 12:00 dan 13:00.'
-                ], 400);
-            }
+            } 
         }
     }
+}
 
     $absensi->save();
     $penilaian->save();
 
-    return response()->json([
-        'message'   => 'Absensi berhasil dicatat.',
-        'absensi'   => $absensi,
-        'penilaian' => $penilaian
-    ]);
+    return response()->json();
 }
 
 
@@ -96,32 +96,6 @@ public function storeabsen(Request $request)
 
 
 
-// public function edit(string $id)
-//     {
-//      $title='Dashboard/Edit-jam-kerja';   
-//         $data = Absensi::findorfail($id);
-//         return view('dashboard.edit-jamkerja', compact('data','title'));
-//     }
-
-    
-//     public function update(Request $request, Absensi $absensi)
-//     {
-//          // dd($request->all());
-//        $rules = [
-//              'jam_kerja' => 'required|in:normal,lembur'
-//         ];
-
-//         $validatedData = $request->validate($rules);
-
-//         Absensi::where('id', $absensi->id)->update($validatedData);
-//         if ($validatedData) {
-//         Alert::success('Success', 'Berhasil Memperbarui Jam Kerja!');
-//         return redirect()->route('data-absensi');
-//         } else {
-//         Alert::error('error','Anda Gagal Memperbarui Jam Kerja!');
-//         return redirect()->route('data-kategori');
-//         }
-//     }
 
 
     

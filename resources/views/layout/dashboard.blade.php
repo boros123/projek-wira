@@ -104,7 +104,16 @@
     
     <!-- Page level custom scripts -->
     <script src="{{asset('sb/js/demo/datatables-demo.js')}}"></script>
-  
+
+
+
+    {{-- Diagram --}}
+    <!-- Page level plugins -->
+    <script src="{{asset('sb/vendor/chart.js/Chart.min.js')}}"></script>
+    
+    <!-- Page level custom scripts -->
+    <script src="{{asset('sb/js/demo/chart-area-demo.js')}}"></script>
+    <script src="{{asset('sb/js/demo/chart-pie-demo.js')}}"></script>
 
 </body>
 

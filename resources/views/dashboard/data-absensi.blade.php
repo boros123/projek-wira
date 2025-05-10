@@ -22,7 +22,7 @@
                                 <th>Keterangan</th>
                                 <th>Status</th>
                                 <th>Jam Kerja</th>
-                                <th>Action</th>
+                             
                             </tr>
                         </thead>
                         <tbody id="absensi-data">

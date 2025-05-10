@@ -19,7 +19,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [PegawaiController::class, 'index'])->name('home');
+
+Route::get('/', function () {
+    return view('dashboard.home',[
+        'title'=> 'home'
+    ] );
+});
+
+Route::get('/data-pegawai', [PegawaiController::class, 'index'])->name('home');
 
 
 // Manage Jabatan

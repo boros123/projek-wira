@@ -18,7 +18,7 @@ class PegawaiController extends Controller
         
               return view('dashboard.data-pegawai',[
                 "jabatans" => Jabatan::all(),
-                "pegawais" => Pegawai::all()->sortByDesc('created_at'),
+                "pegawais" => Pegawai::with('penilaian')->orderByDesc('created_at')->get(),
                 'title'=>'Dashboard/Data Pegawai',
                 'nip'=> 'PG-' . Str::random(9)
         ]);
