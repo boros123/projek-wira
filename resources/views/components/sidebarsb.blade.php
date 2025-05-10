@@ -12,20 +12,21 @@
            <!-- Divider -->
            <hr class="sidebar-divider my-0">
 
+           <!-- Divider -->
+           <hr class="sidebar-divider">
+
+           <!-- Heading -->
+           <div class="sidebar-heading" style="color: white">
+               Tangkap Wajah Online
+           </div>
+
            <!-- Nav Item - Dashboard -->
            <li class="nav-item active">
                <a class="nav-link" href="/">
                    <i class="bi bi-house-door"></i>
                    <span class="text-uppercase">Dashboard</span></a>
            </li>
-
-           <!-- Divider -->
-           <hr class="sidebar-divider">
-
-           <!-- Heading -->
-           <div class="sidebar-heading">
-               Tangkap Wajah Online
-           </div>
+           
            <li class="nav-item">
                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
                    aria-expanded="true" aria-controls="collapseOne">

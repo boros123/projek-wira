@@ -9,14 +9,14 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
+                                <thead style="background-color: #1100ff;">
                                     <tr>
-                                        <th>No</th>
-                                        <th>Nama Pegawai</th>
-                                        <th>Poin</th>
-                                        <th>Poin lembur</th>
-                                        <th>Total Poin</th>
-                                        <th>Action</th>
+                                        <th style="color: white">No</th>
+                                        <th style="color: white">Nama Pegawai</th>
+                                        <th style="color: white">Poin</th>
+                                        <th style="color: white">Poin lembur</th>
+                                        <th style="color: white">Total Poin</th>
+                                        <th style="color: white">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>

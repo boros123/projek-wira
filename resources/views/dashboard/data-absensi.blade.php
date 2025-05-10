@@ -11,17 +11,17 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
+                        <thead style="background-color: #1100ff;">
                             <tr>
-                                <th>No</th>
-                                <th>Nama Pegawai</th>
-                                <th>NIP</th>
-                                <th>Tanggal</th>
-                                <th>Checkin</th>
-                                <th>Checkout</th>
-                                <th>Keterangan</th>
-                                <th>Status</th>
-                                <th>Jam Kerja</th>
+                                <th style="color: white">No</th>
+                                <th style="color: white">Nama Pegawai</th>
+                                <th style="color: white">NIP</th>
+                                <th style="color: white">Tanggal</th>
+                                <th style="color: white">Checkin</th>
+                                <th style="color: white">Checkout</th>
+                                <th style="color: white">Keterangan</th>
+                                <th style="color: white">Status</th>
+                                <th style="color: white">Jam Kerja</th>
                              
                             </tr>
                         </thead>
