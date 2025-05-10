@@ -14,7 +14,7 @@
 
            <!-- Nav Item - Dashboard -->
            <li class="nav-item active">
-               <a class="nav-link" href="/home">
+               <a class="nav-link" href="/">
                    <i class="bi bi-house-door"></i>
                    <span class="text-uppercase">Dashboard</span></a>
            </li>
@@ -24,7 +24,7 @@
 
            <!-- Heading -->
            <div class="sidebar-heading">
-               KopiKorner
+               Tangkap Wajah Online
            </div>
            <li class="nav-item">
                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
@@ -48,7 +48,7 @@
                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                    <div class="bg-white py-2 collapse-inner rounded">
                        <h6 class="collapse-header text-uppercase">Management</h6>
-                       <a class="collapse-item text-uppercase" href="/home/data-gallery">Data Pegawai</a>
+                       <a class="collapse-item text-uppercase" href="/data-pegawai">Data Pegawai</a>
                    </div>
                </div>
            </li>
